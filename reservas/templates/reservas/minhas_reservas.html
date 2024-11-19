@@ -1,15 +1,26 @@
 {% extends 'reservas/base.html' %}
+
 {% block content %}
 <h2>Minhas Reservas</h2>
-{% for solicitacao in solicitacoes %}
-    <div>
-        <h3>Solicitação {{ solicitacao.id }}</h3>
-        <p>Data: {{ solicitacao.data }}</p>
-        <p>Salas: {{ solicitacao.salas.all|join:", " }}</p>
-        <p>Status: {{ solicitacao.status }}</p>
-        {% if solicitacao.justificativa %}
-            <p>Justificativa: {{ solicitacao.justificativa }}</p>
-        {% endif %}
-    </div>
-{% endfor %}
+
+<ul>
+    {% for solicitacao in solicitacoes %}
+        <li>
+            <strong>Prédio:</strong> {{ solicitacao.predio.nome }}<br>
+            <strong>Salas:</strong> 
+            {% for sala in solicitacao.salas.all %}
+                {{ sala.nome }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}<br>
+            <strong>Data:</strong> {{ solicitacao.data }}<br>
+            <strong>Horário:</strong> {{ solicitacao.horario }}<br>
+            <strong>Duração:</strong> {{ solicitacao.duracao }}<br>
+            <strong>Status:</strong> {{ solicitacao.status }}<br>
+            <strong>Descrição:</strong> {{ solicitacao.descricao }}
+        </li>
+    {% empty %}
+        <li>Você ainda não fez nenhuma solicitação.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'solicitar_reserva' %}">Fazer Nova Solicitação</a>
 {% endblock %}

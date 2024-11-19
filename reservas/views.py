@@ -124,21 +124,24 @@ def lista_administradores_prediais(request):
     return render(request, 'reservas/lista_administradores_prediais.html', {'administradores': administradores})
 
 @login_required
+@login_required
 def solicitar_reserva(request):
-    if request.user.is_normal_user:
-        if request.method == 'POST':
-            form = SolicitacaoForm(request.POST)
-            if form.is_valid():
-                solicitacao = form.save(commit=False)
-                solicitacao.solicitante = request.user  # Associe a solicitação ao usuário atual
-                solicitacao.save()
-                form.save_m2m()
-                return redirect('minhas_reservas')
-        else:
-            form = SolicitacaoForm()
-        return render(request, 'reservas/solicitar_reserva.html', {'form': form})
+    """
+    Qualquer usuário autenticado pode solicitar reservas.
+    """
+    if request.method == 'POST':
+        form = SolicitacaoForm(request.POST)
+        if form.is_valid():
+            solicitacao = form.save(commit=False)
+            solicitacao.solicitante = request.user  # Associa a solicitação ao usuário autenticado
+            solicitacao.save()
+            form.save_m2m()  # Salva as relações ManyToMany (salas)
+            return redirect('minhas_reservas')
     else:
-        return redirect('home')
+        form = SolicitacaoForm()
+
+    return render(request, 'reservas/solicitar_reserva.html', {'form': form})
+
 
 def load_salas(request):
     predio_id = request.GET.get('predio_id')
@@ -164,11 +167,12 @@ def avaliar_solicitacoes(request):
 
 @login_required
 def minhas_reservas(request):
-    if request.user.is_grupo_extensao:
-        solicitacoes = Solicitacao.objects.filter(solicitante=request.user.grupoextensao)
-        return render(request, 'reservas/minhas_reservas.html', {'solicitacoes': solicitacoes})
-    else:
-        return redirect('home')
+    """
+    Lista todas as reservas feitas pelo usuário autenticado.
+    """
+    solicitacoes = Solicitacao.objects.filter(solicitante=request.user).order_by('-data', '-horario')
+    return render(request, 'reservas/minhas_reservas.html', {'solicitacoes': solicitacoes})
+
 
 @user_passes_test(is_superuser)
 def criar_predio(request):
