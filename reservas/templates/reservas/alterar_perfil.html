@@ -1,0 +1,9 @@
+{% extends 'reservas/base.html' %}
+{% block content %}
+<h2>Alterar Perfil</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar Alterações</button>
+</form>
+{% endblock %}

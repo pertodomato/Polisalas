@@ -1,0 +1,29 @@
+{% extends 'reservas/base.html' %}
+
+{% block content %}
+<h2>Gerenciar Salas - {{ predio.nome }}</h2>
+
+<!-- Botão para criar nova sala -->
+<a href="{% url 'nova_sala' predio.id %}">
+    <button>Criar Nova Sala</button>
+</a>
+
+<!-- Lista de Salas Existentes -->
+<h3>Salas do Prédio</h3>
+<ul>
+    {% for sala in salas %}
+        <li>
+            {{ sala.nome }} - {{ sala.capacidade }} pessoas
+            <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="sala_id" value="{{ sala.id }}">
+                <button type="submit" name="excluir_sala">Excluir</button>
+            </form>
+        </li>
+    {% empty %}
+        <li>Nenhuma sala cadastrada neste prédio.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'selecionar_predio' %}">Voltar</a>
+{% endblock %}

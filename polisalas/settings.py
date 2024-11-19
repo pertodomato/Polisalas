@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-4g94_)x2-7$_v+)lp6)=)nbh9x+6-v3p83s3igif9eksb)*y^&
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# No final do arquivo settings.py, adicione:
+LOGIN_REDIRECT_URL = 'home'  # ou o nome da rota que você desejar
 
+# No final do arquivo settings.py, adicione:
+LOGOUT_REDIRECT_URL = 'home'  # ou o nome da rota que você desejar
 
 # Application definition
 
@@ -38,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reservas.apps.ReservasConfig',
+    
 ]
 
 MIDDLEWARE = [

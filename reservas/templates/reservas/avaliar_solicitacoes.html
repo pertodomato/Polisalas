@@ -1,0 +1,19 @@
+{% extends 'reservas/base.html' %}
+{% block content %}
+<h2>Solicitações de Reserva</h2>
+{% for solicitacao in solicitacoes %}
+    <div>
+        <h3>Solicitação {{ solicitacao.id }}</h3>
+        <p>Solicitante: {{ solicitacao.solicitante.usuario.username }}</p>
+        <p>Data: {{ solicitacao.data }}</p>
+        <p>Salas: {{ solicitacao.salas.all|join:", " }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="solicitacao_id" value="{{ solicitacao.id }}">
+            <textarea name="justificativa" placeholder="Justificativa"></textarea>
+            <button type="submit" name="acao" value="aprovar">Aprovar</button>
+            <button type="submit" name="acao" value="rejeitar">Rejeitar</button>
+        </form>
+    </div>
+{% endfor %}
+{% endblock %}

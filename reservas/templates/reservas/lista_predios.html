@@ -1,0 +1,11 @@
+{% extends 'reservas/base.html' %}
+
+{% block content %}
+<h2>Lista de Prédios</h2>
+<ul>
+    {% for predio in predios %}
+        <li>{{ predio.nome }} - {{ predio.endereco }}</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'criar_predio' %}">Adicionar Novo Prédio</a>
+{% endblock %}

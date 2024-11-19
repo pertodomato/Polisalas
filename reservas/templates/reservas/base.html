@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>PoliSalas</title>
+</head>
+<body>
+    <header>
+        <h1>PoliSalas</h1>
+        <nav>
+            <a href="{% url 'home' %}">Início</a>
+            {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    <!-- Links para Superusuário -->
+                    <a href="{% url 'lista_administradores_prediais' %}">Administradores Prediais</a>
+                    <a href="{% url 'lista_predios' %}">Listar Prédios</a>
+                    <a href="{% url 'criar_predio' %}">Criar Prédio</a>
+                    <a href="{% url 'selecionar_predio' %}">Gerenciar Salas</a> <!-- Superusuário escolhe prédio -->
+                {% elif user.is_building_administrator %}
+                    <!-- Links para Administrador Predial -->
+                    <a href="{% url 'gerenciar_salas' %}">Gerenciar Salas</a> <!-- Admin gerencia seu prédio -->
+                {% elif user.is_normal_user %}
+                    <!-- Links para Usuário Normal -->
+                    <a href="{% url 'solicitar_reserva' %}">Reservar Sala(s)</a>
+                    <a href="{% url 'minhas_reservas' %}">Minhas Reservas</a>
+                {% endif %}
+                <a href="{% url 'logout' %}">Sair</a>
+            {% else %}
+                <a href="{% url 'login' %}">Entrar</a>
+                <a href="{% url 'registro_usuario' %}">Registrar-se</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 PoliSalas</p>
+    </footer>
+</body>
+</html>

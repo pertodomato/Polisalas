@@ -1,0 +1,12 @@
+{% extends 'reservas/base.html' %}
+
+{% block content %}
+<h2>Criar Nova Sala para {{ predio.nome }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar</button>
+    <a href="{% url 'gerenciar_salas' predio.id %}"><button type="button">Cancelar</button></a>
+</form>
+{% endblock %}
