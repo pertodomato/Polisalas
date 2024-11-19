@@ -3,8 +3,8 @@ from django.contrib.auth.models import AbstractUser
 
 # Modelo de Usuário Personalizado
 class Usuario(AbstractUser):
-    is_grupo_extensao = models.BooleanField(default=False)
-    is_administracao_predial = models.BooleanField(default=False)
+    is_normal_user = models.BooleanField(default=False)
+    is_building_administrator = models.BooleanField(default=False)
 
 # Grupo de Extensão
 class GrupoExtensao(models.Model):
@@ -55,7 +55,7 @@ class Solicitacao(models.Model):
         ('Rejeitada', 'Rejeitada'),
     ]
 
-    solicitante = models.ForeignKey(GrupoExtensao, on_delete=models.CASCADE)
+    solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     predio = models.ForeignKey(Predio, on_delete=models.CASCADE)
     salas = models.ManyToManyField(Sala)
     data = models.DateField()

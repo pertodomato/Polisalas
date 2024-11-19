@@ -1,0 +1,11 @@
+{% extends 'reservas/base.html' %}
+
+{% block content %}
+<h2>Lista de Administradores Prediais</h2>
+<ul>
+    {% for admin in administradores %}
+        <li>{{ admin.username }} - {{ admin.administracaopredial.predio.nome }}</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'criar_administrador_predial' %}">Adicionar Novo Administrador Predial</a>
+{% endblock %}

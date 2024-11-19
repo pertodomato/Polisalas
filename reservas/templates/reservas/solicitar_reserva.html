@@ -1,0 +1,30 @@
+{% extends 'reservas/base.html' %}
+{% block content %}
+<h2>Solicitar Reserva de Sala(s)</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enviar Solicitação</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $("#id_predio").change(function () {
+        var url = "{% url 'ajax_load_salas' %}";  // URL para a view que carrega as salas
+        var predioId = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'predio_id': predioId
+            },
+            success: function (data) {
+                $("#id_salas").html("");
+                for (var i = 0; i < data.length; i++) {
+                    $("#id_salas").append('<option value="' + data[i].id + '">' + data[i].nome + '</option>');
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
