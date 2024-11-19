@@ -55,9 +55,9 @@ class Solicitacao(models.Model):
         ('Rejeitada', 'Rejeitada'),
     ]
 
-    solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE)  # Qualquer tipo de usuário pode solicitar
     predio = models.ForeignKey(Predio, on_delete=models.CASCADE)
-    salas = models.ManyToManyField(Sala)
+    salas = models.ManyToManyField(Sala)  # Permite associar várias salas
     data = models.DateField()
     horario = models.TimeField()
     duracao = models.DurationField()
@@ -66,4 +66,4 @@ class Solicitacao(models.Model):
     justificativa = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"Solicitação {self.id} - {self.solicitante.usuario.username}"
+        return f"Solicitação {self.id} - {self.solicitante.username}"

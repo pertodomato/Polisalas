@@ -85,7 +85,7 @@ class SolicitacaoForm(forms.ModelForm):
             'data': forms.DateInput(attrs={'type': 'date'}),
             'horario': forms.TimeInput(attrs={'type': 'time'}),
             'duracao': forms.NumberInput(attrs={'min': 1}),
-            'salas': forms.CheckboxSelectMultiple(),
+            'salas': forms.CheckboxSelectMultiple(),  # Permite selecionar várias salas
         }
 
     def __init__(self, *args, **kwargs):
@@ -97,9 +97,10 @@ class SolicitacaoForm(forms.ModelForm):
                 predio_id = int(self.data.get('predio'))
                 self.fields['salas'].queryset = Sala.objects.filter(predio_id=predio_id)
             except (ValueError, TypeError):
-                pass  # Valor inválido; queryset permanece vazio.
+                pass  # Valor inválido; queryset permanece vazio
         elif self.instance.pk:
             self.fields['salas'].queryset = self.instance.predio.salas.all()
+
             
 class PredioForm(forms.ModelForm):
     class Meta:
