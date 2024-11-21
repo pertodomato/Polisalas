@@ -1,0 +1,15 @@
+{% extends 'reservas/base.html' %}
+
+{% block content %}
+<h2>Selecione o Prédio para Reservar Sala(s)</h2>
+
+<ul>
+    {% for predio in predios %}
+        <li>
+            <a href="{% url 'solicitar_reserva' predio.id %}">{{ predio.nome }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'home' %}">Voltar</a>
+{% endblock %}

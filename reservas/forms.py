@@ -1,14 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Usuario, GrupoExtensao, AdministracaoPredial, Solicitacao, Sala, Predio
+from .models import Usuario, AdministracaoPredial, Solicitacao, Sala, Predio
+from datetime import datetime, timedelta
 
-# Formulário de Registro para Grupo de Extensão
 class RegistroUsuarioForm(UserCreationForm):
-
-    telefone = forms.CharField(max_length=20)
-    nome_representante = forms.CharField(max_length=100)
-    telefone_representante = forms.CharField(max_length=20)
-    email_representante = forms.EmailField()
+    telefone = forms.CharField(max_length=20, required=False)
+    nome_representante = forms.CharField(max_length=100, required=False)
+    telefone_representante = forms.CharField(max_length=20, required=False)
+    email_representante = forms.EmailField(required=False)
 
     class Meta:
         model = Usuario
@@ -16,45 +15,14 @@ class RegistroUsuarioForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.is_grupo_extensao = True
+        user.telefone = self.cleaned_data.get('telefone')
+        user.nome_representante = self.cleaned_data.get('nome_representante')
+        user.telefone_representante = self.cleaned_data.get('telefone_representante')
+        user.email_representante = self.cleaned_data.get('email_representante')
         if commit:
             user.save()
-            GrupoExtensao.objects.create(
-                usuario=user,
-                telefone=self.cleaned_data['telefone'],
-                nome_representante=self.cleaned_data['nome_representante'],
-                telefone_representante=self.cleaned_data['telefone_representante'],
-                email_representante=self.cleaned_data['email_representante'],
-            )
         return user
 
-
-
-
-class SalaForm(forms.ModelForm):
-    class Meta:
-        model = Sala
-        fields = ['nome', 'capacidade', 'numero_projetores', 'numero_computadores', 'ar_condicionado', 'giz_canetao']
-        widgets = {
-            'ar_condicionado': forms.CheckboxInput(),
-            'giz_canetao': forms.Select(choices=[('Giz', 'Giz'), ('Canetão', 'Canetão')]),
-        }
-
-    def __init__(self, *args, **kwargs):
-        predio_queryset = kwargs.pop('predio_queryset', None)  # Aceita um queryset de prédios como argumento
-        super(SalaForm, self).__init__(*args, **kwargs)
-        if predio_queryset:
-            self.fields['predio'].queryset = predio_queryset
-
-
-
-
-class GrupoExtensaoForm(forms.ModelForm):
-    class Meta:
-        model = GrupoExtensao
-        fields = ['telefone', 'nome_representante', 'telefone_representante', 'email_representante']
-
-# Formulário de Registro para Administração Predial
 class CriarAdministradorPredialForm(UserCreationForm):
     email = forms.EmailField(required=True)
     predio = forms.ModelChoiceField(queryset=Predio.objects.all(), required=True)
@@ -66,7 +34,7 @@ class CriarAdministradorPredialForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.is_building_administrator = True  # Define como administrador predial
+        user.is_building_administrator = True
         if commit:
             user.save()
             AdministracaoPredial.objects.create(
@@ -76,45 +44,68 @@ class CriarAdministradorPredialForm(UserCreationForm):
             )
         return user
 
-# Formulário para Solicitação de Reserva
 class SolicitacaoForm(forms.ModelForm):
+    salas = forms.ModelMultipleChoiceField(
+        queryset=Sala.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        required=True,
+    )
+
     class Meta:
         model = Solicitacao
-        fields = ['predio', 'salas', 'data', 'horario', 'duracao', 'descricao']
+        fields = ['salas', 'data', 'horario', 'duracao', 'descricao']
         widgets = {
             'data': forms.DateInput(attrs={'type': 'date'}),
             'horario': forms.TimeInput(attrs={'type': 'time'}),
-            'duracao': forms.NumberInput(attrs={'min': 1}),
-            'salas': forms.CheckboxSelectMultiple(),  # Permite selecionar várias salas
+            'duracao': forms.NumberInput(attrs={'type': 'number', 'min': 0.5, 'step': 0.5}),
         }
 
     def __init__(self, *args, **kwargs):
+        predio = kwargs.pop('predio', None)
         super(SolicitacaoForm, self).__init__(*args, **kwargs)
-        self.fields['salas'].queryset = Sala.objects.none()
+        if predio:
+            self.fields['salas'].queryset = Sala.objects.filter(predio=predio)
+        else:
+            self.fields['salas'].queryset = Sala.objects.none()
 
-        if 'predio' in self.data:
-            try:
-                predio_id = int(self.data.get('predio'))
-                self.fields['salas'].queryset = Sala.objects.filter(predio_id=predio_id)
-            except (ValueError, TypeError):
-                pass  # Valor inválido; queryset permanece vazio
-        elif self.instance.pk:
-            self.fields['salas'].queryset = self.instance.predio.salas.all()
+    def clean(self):
+        cleaned_data = super().clean()
+        salas = cleaned_data.get('salas')
+        data = cleaned_data.get('data')
+        horario = cleaned_data.get('horario')
+        duracao = cleaned_data.get('duracao')
 
-            
+        if salas and data and horario and duracao:
+            horario_inicio = datetime.combine(data, horario)
+            horario_fim = horario_inicio + timedelta(hours=duracao)
+
+            for sala in salas:
+                conflitos = Solicitacao.objects.filter(
+                    salas=sala,
+                    data=data,
+                    status='Aprovada'
+                ).exclude(
+                    pk=self.instance.pk
+                ).filter(
+                    horario__lt=horario_fim.time(),
+                    horario__gte=horario_inicio.time()
+                )
+
+                if conflitos.exists():
+                    self.add_error('salas', f"A sala {sala.nome} já está reservada no horário especificado.")
+
+        return cleaned_data
+
+class SalaForm(forms.ModelForm):
+    class Meta:
+        model = Sala
+        fields = ['nome', 'capacidade', 'numero_projetores', 'numero_computadores', 'ar_condicionado', 'giz_canetao']
+        widgets = {
+            'ar_condicionado': forms.CheckboxInput(),
+            'giz_canetao': forms.Select(choices=[('Giz', 'Giz'), ('Canetão', 'Canetão')]),
+        }
+
 class PredioForm(forms.ModelForm):
     class Meta:
         model = Predio
         fields = ['nome', 'endereco']
-
-# Formulário para criar Administração Predial
-class AdministracaoPredialForm(forms.ModelForm):
-    class Meta:
-        model = AdministracaoPredial
-        fields = ['usuario', 'departamento', 'predio']
-
-# Formulário para criar Grupo de Extensão
-class GrupoExtensaoForm(forms.ModelForm):
-    class Meta:
-        model = GrupoExtensao
-        fields = ['usuario', 'telefone', 'nome_representante', 'telefone_representante', 'email_representante']
