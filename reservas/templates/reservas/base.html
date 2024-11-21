@@ -11,7 +11,7 @@
             <a href="{% url 'home' %}">Início</a>
             {% if user.is_authenticated %}
                 <!-- Links comuns para todos os usuários autenticados -->
-                <a href="{% url 'solicitar_reserva' %}">Solicitar Reserva</a>
+                <a href="{% url 'selecionar_predio_para_reserva' %}">Solicitar Reserva</a>
                 <a href="{% url 'minhas_reservas' %}">Minhas Reservas</a>
                 
                 {% if user.is_superuser %}
@@ -19,12 +19,14 @@
                     <a href="{% url 'lista_administradores_prediais' %}">Administradores Prediais</a>
                     <a href="{% url 'lista_predios' %}">Listar Prédios</a>
                     <a href="{% url 'criar_predio' %}">Criar Prédio</a>
+                    <a href="{% url 'selecionar_predio' %}">Gerenciar Salas</a>
                 {% elif user.is_building_administrator %}
                     <!-- Links para Administrador Predial -->
                     <a href="{% url 'avaliar_solicitacoes' %}">Solicitações de Reserva</a>
-                    <a href="{% url 'gerenciar_salas' predio.id %}">Gerenciar Salas</a>
+                    <a href="{% url 'gerenciar_salas' predio_id=user.administracaopredial.predio.id %}">Gerenciar Salas</a>
                 {% endif %}
                 
+                <a href="{% url 'alterar_perfil' %}">Alterar Perfil</a>
                 <a href="{% url 'logout' %}">Sair</a>
             {% else %}
                 <a href="{% url 'login' %}">Entrar</a>
@@ -37,7 +39,7 @@
         {% endblock %}
     </main>
     <footer>
-        <p>&copy; 2023 PoliSalas</p>
+        <p>&copy; 2024 PoliSalas</p>
     </footer>
 </body>
 </html>

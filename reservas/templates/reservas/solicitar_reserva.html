@@ -1,13 +1,62 @@
 {% extends 'reservas/base.html' %}
 
 {% block content %}
-<h2>Solicitar Reserva de Sala(s)</h2>
+<h2>Solicitar Reserva de Sala(s) no Prédio {{ predio.nome }}</h2>
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    {% if form.non_field_errors %}
+        <div class="error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <p>
+        <strong>Prédio:</strong> {{ predio.nome }}
+    </p>
+    <p>
+        <label>Sala(s):</label>
+        <ul>
+            {% for sala in salas %}
+                <li>
+                    <label>
+                        <input type="checkbox" name="salas" value="{{ sala.id }}"
+                        {% if sala.id|stringformat:"s" in selected_salas %} checked{% endif %}>
+                        <strong>{{ sala.nome }}</strong><br>
+                        Capacidade: {{ sala.capacidade }} pessoas<br>
+                        Projetores: {{ sala.numero_projetores }}<br>
+                        Computadores: {{ sala.numero_computadores }}<br>
+                        Ar condicionado: {% if sala.ar_condicionado %}Sim{% else %}Não{% endif %}<br>
+                        Tipo: {{ sala.giz_canetao }}<br>
+                    </label>
+                </li>
+            {% endfor %}
+        </ul>
+        {{ form.salas.errors }}
+    </p>
+    <p>
+        <label for="id_data">Data:</label>
+        {{ form.data }}
+        {{ form.data.errors }}
+    </p>
+    <p>
+        <label for="id_horario">Horário de Início:</label>
+        {{ form.horario }}
+        {{ form.horario.errors }}
+    </p>
+    <p>
+        <label for="id_duracao">Duração (em horas):</label>
+        {{ form.duracao }}
+        {{ form.duracao.errors }}
+    </p>
+    <p>
+        <label for="id_descricao">Descrição:</label>
+        {{ form.descricao }}
+        {{ form.descricao.errors }}
+    </p>
     <button type="submit">Enviar Solicitação</button>
 </form>
 
-<a href="{% url 'home' %}">Voltar</a>
+<a href="{% url 'selecionar_predio_para_reserva' %}">Voltar</a>
 {% endblock %}
