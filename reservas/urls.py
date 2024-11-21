@@ -20,4 +20,5 @@ urlpatterns = [
     path('salas/novo/<int:predio_id>/', views.criar_sala, name='criar_sala'),
     path('salas/editar/<int:sala_id>/', views.editar_sala, name='editar_sala'),
     path('api/get_reservas/', views.get_reservas, name='get_reservas'),
+    path('selecionar-predio/', views.selecionar_predio, name='selecionar_predio'),
 ]
