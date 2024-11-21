@@ -164,6 +164,11 @@ def lista_administradores_prediais(request):
     return render(request, 'reservas/lista_administradores_prediais.html', {'administradores': administradores})
 
 @login_required
+def selecionar_predio(request):
+    predios = Predio.objects.all()  # Obtém todos os prédios
+    return render(request, 'reservas/selecionar_predio.html', {'predios': predios})
+
+@login_required
 def gerenciar_salas(request, predio_id=None):
     if request.user.is_building_administrator:
         predio = request.user.administracaopredial.predio
