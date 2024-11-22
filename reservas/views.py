@@ -87,10 +87,40 @@ def solicitar_reserva(request, predio_id):
             solicitacao.solicitante = request.user
             solicitacao.predio = predio
             solicitacao.status = 'Em análise'
-            solicitacao.save()
-            form.save_m2m()
-            messages.success(request, "Sua solicitação foi enviada para análise.")
-            return redirect('minhas_reservas')
+
+            # Validação para verificar conflitos de horários
+            salas_selecionadas = form.cleaned_data['salas']
+            data = form.cleaned_data['data']
+            horario = form.cleaned_data['horario']
+            duracao = form.cleaned_data['duracao']
+            horario_inicio = datetime.combine(data, horario)
+            horario_fim = horario_inicio + timedelta(hours=duracao)
+
+            conflitos = []
+            for sala in salas_selecionadas:
+                conflitos_sala = Solicitacao.objects.filter(
+                    salas=sala,
+                    data=data,
+                    status='Aprovada'
+                ).exclude(
+                    pk=solicitacao.pk  # Exclui a própria solicitação em caso de edição
+                ).filter(
+                    horario__lt=horario_fim.time(),
+                    horario__gte=horario_inicio.time()
+                )
+                if conflitos_sala.exists():
+                    conflitos.append(f"Sala {sala.nome} já está reservada no horário especificado.")
+
+            if conflitos:
+                # Adiciona os erros ao formulário e exibe mensagens
+                form.add_error('salas', "Conflito detectado nas salas selecionadas.")
+                for conflito in conflitos:
+                    messages.error(request, conflito)
+            else:
+                solicitacao.save()
+                form.save_m2m()
+                messages.success(request, "Sua solicitação foi enviada para análise.")
+                return redirect('minhas_reservas')
         else:
             messages.error(request, "Erro ao enviar a solicitação. Verifique os dados e tente novamente.")
     else:
@@ -133,19 +163,39 @@ def minhas_reservas(request):
 @login_required
 def avaliar_solicitacoes(request):
     if request.user.is_building_administrator:
-        solicitacoes = Solicitacao.objects.filter(predio=request.user.administracaopredial.predio, status='Em análise')
+        predio = request.user.administracaopredial.predio
+        
+        # Categoriza as solicitações por status
+        solicitacoes_em_analise = Solicitacao.objects.filter(predio=predio, status='Em análise')
+        solicitacoes_aprovadas = Solicitacao.objects.filter(predio=predio, status='Aprovada')
+        solicitacoes_rejeitadas = Solicitacao.objects.filter(predio=predio, status='Rejeitada')
+        
         if request.method == 'POST':
             solicitacao_id = request.POST.get('solicitacao_id')
             acao = request.POST.get('acao')
             justificativa = request.POST.get('justificativa')
             solicitacao = get_object_or_404(Solicitacao, id=solicitacao_id)
-            solicitacao.status = 'Aprovada' if acao == 'aprovar' else 'Rejeitada'
+
+            # Atualiza o status da solicitação com base na ação
+            if acao == 'aprovar':
+                solicitacao.status = 'Aprovada'
+            elif acao == 'rejeitar':
+                solicitacao.status = 'Rejeitada'
+            
             solicitacao.justificativa = justificativa
             solicitacao.save()
+            
+            # Redireciona para atualizar a página
             return redirect('avaliar_solicitacoes')
-        return render(request, 'reservas/avaliar_solicitacoes.html', {'solicitacoes': solicitacoes})
+
+        return render(request, 'reservas/avaliar_solicitacoes.html', {
+            'solicitacoes_em_analise': solicitacoes_em_analise,
+            'solicitacoes_aprovadas': solicitacoes_aprovadas,
+            'solicitacoes_rejeitadas': solicitacoes_rejeitadas,
+        })
     else:
         return redirect('home')
+
 
 @user_passes_test(is_superuser)
 def criar_administrador_predial(request):
