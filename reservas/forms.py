@@ -49,6 +49,7 @@ class SolicitacaoForm(forms.ModelForm):
         queryset=Sala.objects.none(),
         widget=forms.CheckboxSelectMultiple,
         required=True,
+        label="Salas disponíveis"
     )
 
     class Meta:
@@ -61,8 +62,9 @@ class SolicitacaoForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        # Recebe o prédio como argumento e ajusta a queryset das salas
         predio = kwargs.pop('predio', None)
-        super(SolicitacaoForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if predio:
             self.fields['salas'].queryset = Sala.objects.filter(predio=predio)
         else:
@@ -76,23 +78,31 @@ class SolicitacaoForm(forms.ModelForm):
         duracao = cleaned_data.get('duracao')
 
         if salas and data and horario and duracao:
+            # Calcula o intervalo de tempo da nova solicitação
             horario_inicio = datetime.combine(data, horario)
             horario_fim = horario_inicio + timedelta(hours=duracao)
 
             for sala in salas:
+                # Verifica conflitos de horário com outras solicitações aprovadas
                 conflitos = Solicitacao.objects.filter(
                     salas=sala,
                     data=data,
                     status='Aprovada'
                 ).exclude(
-                    pk=self.instance.pk
+                    pk=self.instance.pk  # Exclui a própria solicitação em caso de edição
                 ).filter(
                     horario__lt=horario_fim.time(),
                     horario__gte=horario_inicio.time()
                 )
 
                 if conflitos.exists():
-                    self.add_error('salas', f"A sala {sala.nome} já está reservada no horário especificado.")
+                    # Adiciona erro específico para a sala com conflito
+                    self.add_error(
+                        'salas',
+                        f"A sala '{sala.nome}' já está reservada das "
+                        f"{conflitos.first().horario.strftime('%H:%M')} às "
+                        f"{(datetime.combine(data, conflitos.first().horario) + timedelta(hours=conflitos.first().duracao)).strftime('%H:%M')}."
+                    )
 
         return cleaned_data
 
