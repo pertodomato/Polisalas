@@ -1,19 +1,28 @@
 {% extends 'reservas/base.html' %}
+
 {% block content %}
 <h2>Solicitações de Reserva</h2>
 {% for solicitacao in solicitacoes %}
-    <div>
+    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
         <h3>Solicitação {{ solicitacao.id }}</h3>
-        <p>Solicitante: {{ solicitacao.solicitante.usuario.username }}</p>
-        <p>Data: {{ solicitacao.data }}</p>
-        <p>Salas: {{ solicitacao.salas.all|join:", " }}</p>
-        <form method="post">
+        <p><strong>Solicitante:</strong> {{ solicitacao.solicitante.username }}</p>
+        <p><strong>Prédio:</strong> {{ solicitacao.predio.nome }}</p>
+        <p><strong>Salas:</strong> {{ solicitacao.salas.all|join:", " }}</p>
+        <p><strong>Data:</strong> {{ solicitacao.data }}</p>
+        <p><strong>Horário:</strong> {{ solicitacao.horario }}</p>
+        <p><strong>Duração:</strong> {{ solicitacao.duracao }} horas</p>
+        <p><strong>Descrição:</strong> {{ solicitacao.descricao|default:"(Sem descrição)" }}</p>
+        <form method="post" style="margin-top: 10px;">
             {% csrf_token %}
             <input type="hidden" name="solicitacao_id" value="{{ solicitacao.id }}">
-            <textarea name="justificativa" placeholder="Justificativa"></textarea>
-            <button type="submit" name="acao" value="aprovar">Aprovar</button>
-            <button type="submit" name="acao" value="rejeitar">Rejeitar</button>
+            <textarea name="justificativa" placeholder="Justificativa" rows="3" style="width: 100%;"></textarea>
+            <div style="margin-top: 10px;">
+                <button type="submit" name="acao" value="aprovar" style="background-color: green; color: white; padding: 5px 10px; border: none; cursor: pointer;">Aprovar</button>
+                <button type="submit" name="acao" value="rejeitar" style="background-color: red; color: white; padding: 5px 10px; border: none; cursor: pointer;">Rejeitar</button>
+            </div>
         </form>
     </div>
+{% empty %}
+    <p>Não há solicitações pendentes de avaliação.</p>
 {% endfor %}
 {% endblock %}
