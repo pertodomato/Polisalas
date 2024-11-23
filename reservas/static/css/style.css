@@ -1,0 +1,224 @@
+/* Reset básico */
+body, h1, p, a {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Corpo */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f4fc; /* Fundo lilás claro */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Cabeçalho */
+.header {
+    background-color: #e5e5e5; /* Cinza claro */
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #6c5ce7; /* Roxo */
+}
+
+/* Navegação */
+.navbar {
+    display: flex;
+    gap: 15px;
+}
+
+.navbar a {
+    text-decoration: none;
+    font-size: 16px;
+    color: #6c5ce7; /* Roxo */
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #5a4bcf; /* Roxo mais escuro */
+}
+
+/* Conteúdo principal */
+.main-content {
+    padding: 100px 20px; /* Espaço abaixo do cabeçalho fixo */
+    margin-top: 20px;
+}
+
+/* Rodapé */
+.footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f8f4fc; /* Lilás claro */
+    color: #777;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+    position: relative;
+}
+
+/* Botões (caso sejam usados em algum bloco) */
+button {
+    background-color: #6c5ce7; /* Roxo */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #5a4bcf; /* Roxo mais escuro */
+}
+/* Estilo do container da página de login */
+.login-container {
+    background-color: #e5e5e5; /* Fundo cinza claro */
+    padding: 20px 30px;
+    border-radius: 12px;
+    width: 320px;
+    margin: 100px auto; /* Centraliza verticalmente */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+    text-align: center;
+}
+
+/* Título do login */
+.login-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #6c5ce7; /* Roxo */
+    margin-bottom: 20px;
+}
+
+/* Formulário de login */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espaçamento entre os elementos do formulário */
+}
+
+/* Campos de entrada */
+.login-form input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f7f5f9; /* Lilás claro */
+    transition: border-color 0.3s;
+}
+
+.login-form input:focus {
+    border-color: #6c5ce7; /* Roxo */
+    outline: none;
+}
+
+/* Botão de login */
+.login-button {
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #6c5ce7; /* Roxo */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-button:hover {
+    background-color: #5a4bcf; /* Roxo mais escuro */
+}
+
+/* Links no formulário */
+.login-form a {
+    font-size: 12px;
+    color: #6c5ce7;
+    text-decoration: none;
+    margin-top: -10px;
+}
+
+.login-form a:hover {
+    text-decoration: underline;
+}
+
+
+/* Estilo do container de registro */
+form {
+    background-color: #e5e5e5; /* Fundo cinza claro */
+    padding: 20px 30px;
+    border-radius: 12px;
+    width: 320px;
+    margin: 100px auto; /* Centraliza o formulário verticalmente */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+    text-align: center;
+}
+
+/* Título da página */
+h2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #6c5ce7; /* Roxo */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Campos do formulário */
+form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f7f5f9; /* Lilás claro */
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+form input:focus {
+    border-color: #6c5ce7; /* Roxo */
+    outline: none;
+}
+
+/* Botão de registro */
+form button {
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #6c5ce7; /* Roxo */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #5a4bcf; /* Roxo mais escuro */
+}
+
+/* Links adicionais (se necessário) */
+form a {
+    font-size: 12px;
+    color: #6c5ce7;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+form a:hover {
+    text-decoration: underline;
+}

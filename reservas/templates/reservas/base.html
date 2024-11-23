@@ -2,26 +2,26 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PoliSalas</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <header>
-        <h1>PoliSalas</h1>
-        <nav>
+    <header class="header">
+        <h1 class="logo">PoliSalas</h1>
+        <nav class="navbar">
             <a href="{% url 'home' %}">Início</a>
             {% if user.is_authenticated %}
-                <!-- Links comuns para todos os usuários autenticados -->
                 <a href="{% url 'selecionar_predio_para_reserva' %}">Solicitar Reserva</a>
                 <a href="{% url 'minhas_reservas' %}">Minhas Reservas</a>
                 
                 {% if user.is_superuser %}
-                    <!-- Links para Superusuário -->
                     <a href="{% url 'lista_administradores_prediais' %}">Administradores Prediais</a>
                     <a href="{% url 'lista_predios' %}">Listar Prédios</a>
                     <a href="{% url 'criar_predio' %}">Criar Prédio</a>
                     <a href="{% url 'selecionar_predio' %}">Gerenciar Salas</a>
                 {% elif user.is_building_administrator %}
-                    <!-- Links para Administrador Predial -->
                     <a href="{% url 'avaliar_solicitacoes' %}">Solicitações de Reserva</a>
                     <a href="{% url 'gerenciar_salas' predio_id=user.administracaopredial.predio.id %}">Gerenciar Salas</a>
                 {% endif %}
@@ -34,11 +34,11 @@
             {% endif %}
         </nav>
     </header>
-    <main>
+    <main class="main-content">
         {% block content %}
         {% endblock %}
     </main>
-    <footer>
+    <footer class="footer">
         <p>&copy; 2024 PoliSalas</p>
     </footer>
 </body>
