@@ -1,30 +1,31 @@
-<!-- templates/reservas/minhas_reservas.html -->
-
 {% extends 'reservas/base.html' %}
 
 {% block content %}
 <h2>Minhas Reservas</h2>
+<a href="{% url 'selecionar_predio_para_reserva' %}" class="new-request-button">Fazer Nova Solicitação</a>
 
-<ul>
+<div class="cards-container">
     {% for solicitacao in solicitacoes %}
-    <li>
-        <strong>Prédio:</strong> {{ solicitacao.predio.nome }}<br>
-        <strong>Sala(s):</strong>
-        <ul>
-            {% for sala in solicitacao.salas.all %}
-                <li>{{ sala.nome }}</li>
-            {% endfor %}
-        </ul>
-        <strong>Data:</strong> {{ solicitacao.data }}<br>
-        <strong>Horário:</strong> {{ solicitacao.horario }}<br>
-        <strong>Duração:</strong> {{ solicitacao.duracao_formatada }}<br>
-        <strong>Status:</strong> {{ solicitacao.status }}<br>
-        <strong>Descrição:</strong> {{ solicitacao.descricao }}
-    </li>
+    <div class="card">
+        <div class="card-content">
+            <h3>Solicitação #{{ solicitacao.id }}</h3>
+            <p><strong>Prédio:</strong> {{ solicitacao.predio.nome }}</p>
+            <p><strong>Salas:</strong>
+                <ul>
+                    {% for sala in solicitacao.salas.all %}
+                        <li>{{ sala.nome }}</li>
+                    {% endfor %}
+                </ul>
+            </p>
+            <p><strong>Data:</strong> {{ solicitacao.data }}</p>
+            <p><strong>Horário:</strong> {{ solicitacao.horario }}</p>
+            <p><strong>Duração:</strong> {{ solicitacao.duracao_formatada }}</p>
+            <p><strong>Status:</strong> {{ solicitacao.status }}</p>
+            <p><strong>Descrição:</strong> {{ solicitacao.descricao }}</p>
+        </div>
+    </div>
     {% empty %}
-    <li>Você ainda não fez nenhuma solicitação.</li>
+    <p>Você ainda não fez nenhuma solicitação.</p>
     {% endfor %}
-</ul>
-
-<a href="{% url 'selecionar_predio_para_reserva' %}">Fazer Nova Solicitação</a>
+</div>
 {% endblock %}

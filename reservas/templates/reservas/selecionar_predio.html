@@ -2,12 +2,15 @@
 
 {% block content %}
 <h2>Selecione um Prédio</h2>
-<ul>
+<div class="cards-container">
     {% for predio in predios %}
-        <li>
-            <a href="{% url 'gerenciar_salas' predio.id %}">{{ predio.nome }}</a>
-        </li>
+    <a href="{% url 'gerenciar_salas' predio.id %}" class="card">
+        <div class="card-content">
+            <h3>{{ predio.nome }}</h3>
+            <!-- You can add more details about each prédio here if available -->
+        </div>
+    </a>
     {% endfor %}
-</ul>
-<a href="{% url 'home' %}">Voltar</a>
+</div>
+<a href="{% url 'home' %}" class="button-reserva voltar">Voltar</a>
 {% endblock %}

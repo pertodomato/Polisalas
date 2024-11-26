@@ -2,10 +2,15 @@
 
 {% block content %}
 <h2>Lista de Prédios</h2>
-<ul>
+<div class="cards-container">
     {% for predio in predios %}
-        <li>{{ predio.nome }} - {{ predio.endereco }}</li>
+    <div class="card">
+        <div class="card-content">
+            <h3>{{ predio.nome }}</h3>
+            <!-- Add more details if needed -->
+        </div>
+    </div>
     {% endfor %}
-</ul>
-<a href="{% url 'criar_predio' %}">Adicionar Novo Prédio</a>
+</div>
+<a href="{% url 'criar_predio' %}" class="button-reserva">Adicionar Novo Prédio</a>
 {% endblock %}

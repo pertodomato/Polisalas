@@ -1,9 +1,9 @@
 {% extends 'reservas/base.html' %}
 
 {% block content %}
-<h2>Solicitar Reserva de Sala(s) no Prédio {{ predio.nome }}</h2>
+<h2 class="content-title">Solicitar Reserva de Sala(s) no Prédio {{ predio.nome }}</h2>
 
-<form method="post">
+<form method="post" class="form-container">
     {% csrf_token %}
 
     {% if form.non_field_errors %}
@@ -12,51 +12,55 @@
         </div>
     {% endif %}
 
-    <p>
+    <div class="form-group">
         <strong>Prédio:</strong> {{ predio.nome }}
-    </p>
-    <p>
-        <label>Sala(s):</label>
-        <ul>
-            {% for sala in salas %}
-                <li>
-                    <label>
-                        <input type="checkbox" name="salas" value="{{ sala.id }}"
-                        {% if sala.id|stringformat:"s" in selected_salas %} checked{% endif %}>
-                        <strong>{{ sala.nome }}</strong><br>
-                        Capacidade: {{ sala.capacidade }} pessoas<br>
-                        Projetores: {{ sala.numero_projetores }}<br>
-                        Computadores: {{ sala.numero_computadores }}<br>
-                        Ar condicionado: {% if sala.ar_condicionado %}Sim{% else %}Não{% endif %}<br>
-                        Tipo: {{ sala.giz_canetao }}<br>
-                    </label>
-                </li>
-            {% endfor %}
-        </ul>
-        {{ form.salas.errors }}
-    </p>
-    <p>
+    </div>
+
+    <!-- Cards Container for Salas -->
+    <div class="cards-container">
+        {% for sala in salas %}
+            <label class="card">
+                <input type="checkbox" name="salas" value="{{ sala.id }}"
+                {% if sala.id|stringformat:"s" in selected_salas %} checked{% endif %} style="display: none;">
+                <div class="card-content">
+                    <h3>{{ sala.nome }}</h3>
+                    <p><strong>Capacidade:</strong> {{ sala.capacidade }} pessoas</p>
+                    <p><strong>Projetores:</strong> {{ sala.numero_projetores }}</p>
+                    <p><strong>Computadores:</strong> {{ sala.numero_computadores }}</p>
+                    <p><strong>Ar Condicionado:</strong> {% if sala.ar_condicionado %}Sim{% else %}Não{% endif %}</p>
+                    <p><strong>Tipo:</strong> {{ sala.giz_canetao }}</p>
+                </div>
+            </label>
+        {% endfor %}
+    </div>
+    {{ form.salas.errors }}
+
+    <div class="form-group">
         <label for="id_data">Data:</label>
         {{ form.data }}
         {{ form.data.errors }}
-    </p>
-    <p>
+    </div>
+
+    <div class="form-group">
         <label for="id_horario">Horário de Início:</label>
         {{ form.horario }}
         {{ form.horario.errors }}
-    </p>
-    <p>
+    </div>
+
+    <div class="form-group">
         <label for="id_duracao">Duração (em horas):</label>
         {{ form.duracao }}
         {{ form.duracao.errors }}
-    </p>
-    <p>
+    </div>
+
+    <div class="form-group">
         <label for="id_descricao">Descrição:</label>
         {{ form.descricao }}
         {{ form.descricao.errors }}
-    </p>
-    <button type="submit">Enviar Solicitação</button>
+    </div>
+
+    <button type="submit" class="button-reserva">Enviar Solicitação</button>
 </form>
 
-<a href="{% url 'selecionar_predio_para_reserva' %}">Voltar</a>
+<a href="{% url 'selecionar_predio_para_reserva' %}" class="button-reserva voltar">Voltar</a>
 {% endblock %}

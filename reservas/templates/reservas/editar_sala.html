@@ -2,10 +2,10 @@
 
 {% block content %}
 <h2>{% if sala %}Editar Sala: {{ sala.nome }}{% else %}Criar Nova Sala{% endif %}</h2>
-<form method="post">
+<form method="post" class="form-container">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">{% if sala %}Salvar Alterações{% else %}Criar Sala{% endif %}</button>
 </form>
-<a href="{% url 'selecionar_predio' %}">Voltar</a>
+<a href="{% url 'selecionar_predio' %}" class="button-reserva voltar">Voltar</a>
 {% endblock %}

@@ -3,13 +3,17 @@
 {% block content %}
 <h2>Selecione o Prédio para Reservar Sala(s)</h2>
 
-<ul>
+<!-- Cards Container for Prédios -->
+<div class="cards-container">
     {% for predio in predios %}
-        <li>
-            <a href="{% url 'solicitar_reserva' predio.id %}">{{ predio.nome }}</a>
-        </li>
+        <a href="{% url 'solicitar_reserva' predio.id %}" class="card">
+            <div class="card-content">
+                <h3>{{ predio.nome }}</h3>
+                <!-- Add more details if needed -->
+            </div>
+        </a>
     {% endfor %}
-</ul>
+</div>
 
-<a href="{% url 'home' %}">Voltar</a>
+<a href="{% url 'home' %}" class="button-reserva voltar">Voltar</a>
 {% endblock %}

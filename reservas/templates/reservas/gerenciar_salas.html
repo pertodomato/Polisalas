@@ -1,22 +1,31 @@
 {% extends 'reservas/base.html' %}
 
 {% block content %}
-<h2>Gerenciar Salas - {{ predio.nome }}</h2>
+<h2 class="page-title">Gerenciar Salas - {{ predio.nome }}</h2>
 
-<ul>
+<div class="cards-container">
     {% for sala in salas %}
-        <li>
-            {{ sala.nome }} - Capacidade: {{ sala.capacidade }}
-            <form method="post" style="display: inline;">
-                {% csrf_token %}
-                <input type="hidden" name="sala_id" value="{{ sala.id }}">
-                <button type="submit" name="excluir_sala">Excluir</button>
-            </form>
-        </li>
+    <div class="card">
+        <div class="card-content">
+            <h3>{{ sala.nome }}</h3>
+            <p><strong>Capacidade:</strong> {{ sala.capacidade }} pessoas</p>
+            <p><strong>Projetores:</strong> {{ sala.numero_projetores }}</p>
+            <p><strong>Computadores:</strong> {{ sala.numero_computadores }}</p>
+            <p><strong>Ar Condicionado:</strong> {% if sala.ar_condicionado %}Sim{% else %}Não{% endif %}</p>
+            <p><strong>Tipo:</strong> {{ sala.giz_canetao }}</p>
+            <div class="card-actions">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="sala_id" value="{{ sala.id }}">
+                    <button type="submit" name="excluir_sala">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
     {% endfor %}
-</ul>
+</div>
 
-<a href="{% url 'criar_sala' predio.id %}">Adicionar Nova Sala</a>
+<a href="{% url 'criar_sala' predio.id %}" class="button-reserva">Adicionar Nova Sala</a>
 <br>
-<a href="{% url 'lista_predios' %}">Voltar</a>
+<a href="{% url 'lista_predios' %}" class="button-reserva voltar">Voltar</a>
 {% endblock %}

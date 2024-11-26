@@ -2,10 +2,15 @@
 
 {% block content %}
 <h2>Lista de Administradores Prediais</h2>
-<ul>
+<div class="cards-container">
     {% for admin in administradores %}
-        <li>{{ admin.username }} - {{ admin.administracaopredial.predio.nome }}</li>
+    <div class="card">
+        <div class="card-content">
+            <h3>{{ admin.username }}</h3>
+            <p><strong>Prédio:</strong> {{ admin.administracaopredial.predio.nome }}</p>
+        </div>
+    </div>
     {% endfor %}
-</ul>
-<a href="{% url 'criar_administrador_predial' %}">Adicionar Novo Administrador Predial</a>
+</div>
+<a href="{% url 'criar_administrador_predial' %}" class="button-reserva">Adicionar Novo Administrador Predial</a>
 {% endblock %}

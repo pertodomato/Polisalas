@@ -1,43 +1,58 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>PoliSalas</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
+    <!-- Barra de Navegação Superior -->
     <header>
-        <h1>PoliSalas</h1>
-        <nav>
-            <a href="{% url 'home' %}">Início</a>
+        <div class="navbar">
+            <div class="navbar-top">
+                <a href="{% url 'home' %}" class="brand-logo">PoliSalas</a>
+                <nav>
+                    <ul>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'alterar_perfil' %}">Alterar Perfil</a></li>
+                            <li><a href="{% url 'logout' %}">Sair</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Entrar</a></li>
+                            <li><a href="{% url 'registro_usuario' %}">Registrar-se</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
             {% if user.is_authenticated %}
-                <!-- Links comuns para todos os usuários autenticados -->
-                <a href="{% url 'selecionar_predio_para_reserva' %}">Solicitar Reserva</a>
-                <a href="{% url 'minhas_reservas' %}">Minhas Reservas</a>
-                
-                {% if user.is_superuser %}
-                    <!-- Links para Superusuário -->
-                    <a href="{% url 'lista_administradores_prediais' %}">Administradores Prediais</a>
-                    <a href="{% url 'lista_predios' %}">Listar Prédios</a>
-                    <a href="{% url 'criar_predio' %}">Criar Prédio</a>
-                    <a href="{% url 'selecionar_predio' %}">Gerenciar Salas</a>
-                {% elif user.is_building_administrator %}
-                    <!-- Links para Administrador Predial -->
-                    <a href="{% url 'avaliar_solicitacoes' %}">Solicitações de Reserva</a>
-                    <a href="{% url 'gerenciar_salas' predio_id=user.administracaopredial.predio.id %}">Gerenciar Salas</a>
-                {% endif %}
-                
-                <a href="{% url 'alterar_perfil' %}">Alterar Perfil</a>
-                <a href="{% url 'logout' %}">Sair</a>
-            {% else %}
-                <a href="{% url 'login' %}">Entrar</a>
-                <a href="{% url 'registro_usuario' %}">Registrar-se</a>
+            <div class="navbar-bottom">
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'selecionar_predio_para_reserva' %}">Solicitar Reserva</a></li>
+                        <li><a href="{% url 'minhas_reservas' %}">Minhas Reservas</a></li>
+                        {% if user.is_superuser %}
+                            <li><a href="{% url 'lista_administradores_prediais' %}">Administradores Prediais</a></li>
+                            <li><a href="{% url 'lista_predios' %}">Listar Prédios</a></li>
+                            <li><a href="{% url 'criar_predio' %}">Criar Prédio</a></li>
+                            <li><a href="{% url 'selecionar_predio' %}">Gerenciar Salas</a></li>
+                        {% elif user.is_building_administrator %}
+                            <li><a href="{% url 'avaliar_solicitacoes' %}">Solicitações de Reserva</a></li>
+                            <li><a href="{% url 'gerenciar_salas' predio_id=user.administracaopredial.predio.id %}">Gerenciar Salas</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
             {% endif %}
-        </nav>
+        </div>
     </header>
+
+    <!-- Conteúdo Principal -->
     <main>
         {% block content %}
         {% endblock %}
     </main>
+
+    <!-- Rodapé -->
     <footer>
         <p>&copy; 2024 PoliSalas</p>
     </footer>
