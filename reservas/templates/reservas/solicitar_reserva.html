@@ -19,9 +19,9 @@
     <!-- Cards Container for Salas -->
     <div class="cards-container">
         {% for sala in salas %}
-            <label class="card">
+            <label class="card-selectable">
                 <input type="checkbox" name="salas" value="{{ sala.id }}"
-                {% if sala.id|stringformat:"s" in selected_salas %} checked{% endif %} style="display: none;">
+                {% if sala.id|stringformat:"s" in selected_salas %} checked{% endif %}>
                 <div class="card-content">
                     <h3>{{ sala.nome }}</h3>
                     <p><strong>Capacidade:</strong> {{ sala.capacidade }} pessoas</p>
@@ -30,6 +30,7 @@
                     <p><strong>Ar Condicionado:</strong> {% if sala.ar_condicionado %}Sim{% else %}Não{% endif %}</p>
                     <p><strong>Tipo:</strong> {{ sala.giz_canetao }}</p>
                 </div>
+                <span class="custom-checkbox"></span>
             </label>
         {% endfor %}
     </div>

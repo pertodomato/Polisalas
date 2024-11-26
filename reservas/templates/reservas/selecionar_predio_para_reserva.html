@@ -9,6 +9,7 @@
         <a href="{% url 'solicitar_reserva' predio.id %}" class="card">
             <div class="card-content">
                 <h3>{{ predio.nome }}</h3>
+                <p><strong>Endereço:</strong> {{ predio.endereco }}</p>
                 <!-- Add more details if needed -->
             </div>
         </a>

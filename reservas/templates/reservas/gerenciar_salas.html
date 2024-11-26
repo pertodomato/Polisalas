@@ -14,7 +14,8 @@
             <p><strong>Ar Condicionado:</strong> {% if sala.ar_condicionado %}Sim{% else %}Não{% endif %}</p>
             <p><strong>Tipo:</strong> {{ sala.giz_canetao }}</p>
             <div class="card-actions">
-                <form method="post">
+                <a href="{% url 'editar_sala' sala.id %}" class="button-reserva">Editar</a>
+                <form method="post" style="display: inline;">
                     {% csrf_token %}
                     <input type="hidden" name="sala_id" value="{{ sala.id }}">
                     <button type="submit" name="excluir_sala">Excluir</button>

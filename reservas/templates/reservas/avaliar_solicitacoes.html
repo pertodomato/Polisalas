@@ -6,17 +6,21 @@
 <h3 class="content-title">Em Análise</h3>
 <div class="cards-container">
     {% for solicitacao in solicitacoes_em_analise %}
-    <div class="card">
+    <div class="card pending">
         <div class="card-content">
             <h3>Solicitação #{{ solicitacao.id }}</h3>
             <p><strong>Solicitante:</strong> {{ solicitacao.solicitante.username }}</p>
             <p><strong>Prédio:</strong> {{ solicitacao.predio.nome }}</p>
-            <p><strong>Salas:</strong> {{ solicitacao.salas.all|join:", " }}</p>
+            <p><strong>Salas:</strong>
+                {% for sala in solicitacao.salas.all %}
+                    {{ sala.nome }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
             <p><strong>Data:</strong> {{ solicitacao.data }}</p>
             <p><strong>Horário:</strong> {{ solicitacao.horario }}</p>
             <p><strong>Duração:</strong> {{ solicitacao.duracao }} horas</p>
             <p><strong>Descrição:</strong> {{ solicitacao.descricao }}</p>
-            <form method="post" class="form-actions">
+            <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="solicitacao_id" value="{{ solicitacao.id }}">
                 <textarea name="justificativa" placeholder="Justificativa"></textarea>
@@ -35,12 +39,16 @@
 <h3 class="content-title">Aprovadas</h3>
 <div class="cards-container">
     {% for solicitacao in solicitacoes_aprovadas %}
-    <div class="card">
+    <div class="card approved">
         <div class="card-content">
             <h3>Solicitação #{{ solicitacao.id }}</h3>
             <p><strong>Solicitante:</strong> {{ solicitacao.solicitante.username }}</p>
             <p><strong>Prédio:</strong> {{ solicitacao.predio.nome }}</p>
-            <p><strong>Salas:</strong> {{ solicitacao.salas.all|join:", " }}</p>
+            <p><strong>Salas:</strong>
+                {% for sala in solicitacao.salas.all %}
+                    {{ sala.nome }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
             <p><strong>Data:</strong> {{ solicitacao.data }}</p>
             <p><strong>Horário:</strong> {{ solicitacao.horario }}</p>
             <p><strong>Duração:</strong> {{ solicitacao.duracao }} horas</p>
@@ -55,12 +63,16 @@
 <h3 class="content-title">Rejeitadas</h3>
 <div class="cards-container">
     {% for solicitacao in solicitacoes_rejeitadas %}
-    <div class="card">
+    <div class="card rejected">
         <div class="card-content">
             <h3>Solicitação #{{ solicitacao.id }}</h3>
             <p><strong>Solicitante:</strong> {{ solicitacao.solicitante.username }}</p>
             <p><strong>Prédio:</strong> {{ solicitacao.predio.nome }}</p>
-            <p><strong>Salas:</strong> {{ solicitacao.salas.all|join:", " }}</p>
+            <p><strong>Salas:</strong>
+                {% for sala in solicitacao.salas.all %}
+                    {{ sala.nome }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
             <p><strong>Data:</strong> {{ solicitacao.data }}</p>
             <p><strong>Horário:</strong> {{ solicitacao.horario }}</p>
             <p><strong>Duração:</strong> {{ solicitacao.duracao }} horas</p>

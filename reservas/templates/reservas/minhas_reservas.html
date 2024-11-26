@@ -6,7 +6,14 @@
 
 <div class="cards-container">
     {% for solicitacao in solicitacoes %}
-    <div class="card">
+    <div class="card
+        {% if solicitacao.status == 'Aprovada' %}
+            approved
+        {% elif solicitacao.status == 'Rejeitada' %}
+            rejected
+        {% else %}
+            pending
+        {% endif %}">
         <div class="card-content">
             <h3>Solicitação #{{ solicitacao.id }}</h3>
             <p><strong>Prédio:</strong> {{ solicitacao.predio.nome }}</p>
