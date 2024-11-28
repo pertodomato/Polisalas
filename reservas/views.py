@@ -147,9 +147,9 @@ def minhas_reservas(request):
     """
     solicitacoes = Solicitacao.objects.filter(solicitante=request.user).order_by('-data', '-horario')
 
-    # Ajustar a duração dividindo por 3600000000 e formatar em horas e minutos
+    
     for solicitacao in solicitacoes:
-        duracao_horas = solicitacao.duracao #/ 3600000000   Dividir por 3600000000
+        duracao_horas = solicitacao.duracao
         horas = int(duracao_horas)
         minutos = int((duracao_horas - horas) * 60)
         if minutos > 0:
