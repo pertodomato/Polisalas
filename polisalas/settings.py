@@ -22,8 +22,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = False
 ALLOWED_HOSTS = ['polisalas.onrender.com']
 
-ALLOWED_HOSTS = []
-
 LOGIN_REDIRECT_URL = 'home'  
 
 LOGOUT_REDIRECT_URL = 'home'  
