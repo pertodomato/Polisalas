@@ -20,8 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = False
-ALLOWED_HOSTS = ['polisalas.onrender.com']
-
+ALLOWED_HOSTS = ['polisalas.onrender.com',]
 
 LOGIN_REDIRECT_URL = 'home'  
 
