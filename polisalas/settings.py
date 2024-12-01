@@ -17,9 +17,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 1
 
-DEBUG = True
-ALLOWED_HOSTS = []
-#ALLOWED_HOSTS = ['polisalas.onrender.com',]
+DEBUG = False
+ALLOWED_HOSTS = ['polisalas.onrender.com',]
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
