@@ -23,12 +23,11 @@ python manage.py collectstatic --noinput
 echo "Instalando dependências do frontend..."
 cd reservas/frontend
 
-# Força a instalação do webpack-cli para evitar interações manuais
+# Instala as dependências e força a instalação do webpack-cli
 npm install
-npm install -D webpack-cli
 
 echo "Compilando arquivos do React com Webpack..."
-npm run build || {
+yes | npm run build || {
   echo "Erro ao compilar com Webpack. Verifique as dependências do frontend."
   exit 1
 }
