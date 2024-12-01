@@ -292,3 +292,7 @@ def criar_predio(request):
 def lista_predios(request):
     predios = Predio.objects.all()
     return render(request, 'reservas/lista_predios.html', {'predios': predios})
+from django.shortcuts import render
+
+def fale_conosco(request):
+    return render(request, 'reservas/fale_conosco.html')

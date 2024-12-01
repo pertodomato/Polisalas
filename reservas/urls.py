@@ -21,4 +21,5 @@ urlpatterns = [
     path('salas/editar/<int:sala_id>/', views.editar_sala, name='editar_sala'),
     path('api/get_reservas/', views.get_reservas, name='get_reservas'),
     path('selecionar-predio/', views.selecionar_predio, name='selecionar_predio'),
+    path('fale_conosco/', views.fale_conosco, name='fale_conosco'),
 ]

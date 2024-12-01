@@ -12,19 +12,17 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = 1
 
+DEBUG = True
+ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['polisalas.onrender.com',]
 
-
-SECRET_KEY = os.environ.get('SECRET_KEY')
-
-DEBUG = False
-ALLOWED_HOSTS = ['polisalas.onrender.com',]
-
-LOGIN_REDIRECT_URL = 'home'  
-
-LOGOUT_REDIRECT_URL = 'home'  
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 
 # Application definition
 
@@ -36,7 +34,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reservas.apps.ReservasConfig',
-    
 ]
 
 MIDDLEWARE = [
@@ -47,7 +44,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',  # Removido para evitar erro
 ]
 
 ROOT_URLCONF = 'polisalas.urls'
@@ -70,9 +67,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'polisalas.wsgi.application'
 
-
 # Database
-
 
 DATABASES = {
     'default': {
@@ -84,7 +79,6 @@ DATABASES = {
 AUTH_USER_MODEL = 'reservas.Usuario'
 
 # Password validation
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -101,8 +95,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -111,14 +103,13 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'reservas', 'static'),
+]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # Removido para evitar erro
