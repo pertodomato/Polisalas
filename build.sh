@@ -2,6 +2,8 @@
 # exit on error
 set -o errexit
 
+set -x  # Habilita logs detalhados
+
 echo "Instalando dependências do backend..."
 pip install --upgrade pip
 pip install -r requirements.txt
@@ -11,7 +13,7 @@ if [ -f /etc/secrets/db_base64.txt ]; then
   echo "Banco de dados codificado encontrado. Decodificando..."
   base64 --decode /etc/secrets/db_base64.txt > /opt/render/project/src/db.sqlite3
 else
-  echo "Arquivo /etc/secrets/db_base64.txt não encontrado. Certifique-se de que o banco de dados está configurado corretamente."
+  echo "Arquivo /etc/secrets/db_base64.txt não encontrado."
 fi
 
 echo "Aplicando migrações..."
@@ -22,16 +24,16 @@ python manage.py collectstatic --noinput
 
 echo "Instalando dependências do frontend..."
 cd reservas/frontend
-
-# Instala as dependências e força a instalação do webpack-cli
+rm -rf node_modules
 npm install
 
 echo "Compilando arquivos do React com Webpack..."
-yes | npm run build || {
-  echo "Erro ao compilar com Webpack. Verifique as dependências do frontend."
+npx webpack --mode production || {
+  echo "Erro ao compilar com Webpack."
   exit 1
 }
 
 cd ../..
 
+set +x  # Desabilita logs detalhados
 echo "Build concluído com sucesso!"
