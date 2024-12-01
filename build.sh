@@ -2,7 +2,7 @@
 # exit on error
 set -o errexit
 
-echo "Instalando dependências..."
+echo "Instalando dependências do backend..."
 pip install --upgrade pip
 pip install -r requirements.txt
 
@@ -16,13 +16,16 @@ fi
 echo "Aplicando migrações..."
 python manage.py migrate
 
-echo "Coletando arquivos estáticos..."
+echo "Coletando arquivos estáticos do Django..."
 python manage.py collectstatic --noinput
 
 echo "Instalando dependências do frontend..."
 cd reservas/frontend
 npm install
+
+echo "Compilando arquivos do React com Webpack..."
 npm run build
+
 cd ../..
 
-echo "Script concluído com sucesso!"
+echo "Build concluído com sucesso!"
