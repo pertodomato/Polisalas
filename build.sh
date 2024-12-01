@@ -24,7 +24,7 @@ cd reservas/frontend
 npm install
 
 echo "Compilando arquivos do React com Webpack..."
-npm run build
+yes | npm run build || npm install -D webpack-cli && npm run build
 
 cd ../..
 
